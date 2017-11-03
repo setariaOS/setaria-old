@@ -4,8 +4,8 @@ boot:
 	make -C ./src/boot
 
 setaria.img: boot
-	cp ./bin/boot/bootloader.bin ./bin/setaria.img
+	cp ./src/boot/bootloader.bin ./setaria.img
 
 clean:
 	make -C ./src/boot clean
-	rm -rf ./bin
+	rm -rf ./setaria.img

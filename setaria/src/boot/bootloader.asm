@@ -88,7 +88,7 @@ bootloader_disk_read_end:
     call bootloader_screen_print
     add word[bootloader_message_y], 0x01
     add sp, 6
-    
+
 bootloader_start_micro_kernel:
     jmp 0x1000:0x0000
 
@@ -127,7 +127,11 @@ bootloader_screen_print:
 
     mov si, word[bp + 8]
 
+    mov byte[bootloader_message_x], 0x00
+
 bootloader_screen_print_loop:
+    add byte[bootloader_message_x], 0x01
+
     mov cl, byte[si]
     cmp cl, 0
     je bootloader_screen_print_end
@@ -139,6 +143,26 @@ bootloader_screen_print_loop:
     jmp bootloader_screen_print_loop
 
 bootloader_screen_print_end:
+    mov ah, 0x02
+    mov bh, 0x00
+
+    cmp byte[bp + 6], 0x00
+    je bootloader_screen_print_end_big
+    jne bootloader_screen_print_end_little
+
+bootloader_screen_print_end_big:
+    mov dh, byte[bp + 7]
+    jmp bootloader_screen_print_end_common
+
+bootloader_screen_print_end_little:
+    mov dh, byte[bp + 6]
+
+bootloader_screen_print_end_common:
+    mov dl, byte[bootloader_message_x]
+    sub dl, 0x01
+    int 0x10
+    jc bootloader_bios_exception
+
     pop dx
     pop cx
     pop ax
@@ -152,6 +176,7 @@ bootloader_message_boot_started:        db '[BOOTLOADER] Boot has started.', 0x0
 bootloader_message_disk_reset:          db '[BOOTLOADER] Disk is ready to read.', 0x00
 bootloader_message_micro_kernel_read:   db '[BOOTLOADER] Micro-Kernel has loaded.', 0x00
 bootloader_message_bios_exception:      db '[BOOTLOADER] Unknown exception occurred in BIOS.', 0x00
+bootloader_message_x:                   db 0x00
 bootloader_message_y:                   dw 0x00
 bootloader_micro_kernel_size:           dw 0x0400
 bootloader_micro_kernel_start_head:     db 0x00

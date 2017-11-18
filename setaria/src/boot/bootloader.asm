@@ -31,7 +31,7 @@ bootloader_screen_clear:
 	push word[bootloader_message_y]
 	push 0
 	call bootloader_screen_print
-	add word[bootloader_message_y], 0x01
+	add word[bootloader_message_y], 0x0001
 	add sp, 6
 
 bootloader_disk_reset:
@@ -49,7 +49,7 @@ bootloader_disk_reset:
 	push word[bootloader_message_y]
 	push 0
 	call bootloader_screen_print
-	add word[bootloader_message_y], 0x01
+	add word[bootloader_message_y], 0x0001
 	add sp, 6
 
 bootloader_disk_read:
@@ -86,7 +86,7 @@ bootloader_disk_read_end:
 	push word[bootloader_message_y]
 	push 0
 	call bootloader_screen_print
-	add word[bootloader_message_y], 0x01
+	add word[bootloader_message_y], 0x0001
 	add sp, 6
 
 bootloader_start_micro_kernel:
@@ -97,7 +97,7 @@ bootloader_bios_exception:
 	push word[bootloader_message_y]
 	push 0
 	call bootloader_screen_print
-	add word[bootloader_message_y], 0x01
+	add word[bootloader_message_y], 0x0001
 	add sp, 6
 
 	jmp $
@@ -177,7 +177,7 @@ bootloader_message_disk_reset:			db '[BOOTLOADER] Disk is ready.', 0x00
 bootloader_message_micro_kernel_read:	db '[BOOTLOADER] Micro-Kernel has been loaded.', 0x00
 bootloader_message_bios_exception:		db '[BOOTLOADER] Unknown exception occurred in BIOS.', 0x00
 bootloader_message_x:					db 0x00
-bootloader_message_y:					dw 0x00
+bootloader_message_y:					dw 0x0000
 bootloader_micro_kernel_size:			dw 0x0400
 bootloader_micro_kernel_start_head:		db 0x00
 bootloader_micro_kernel_start_track:	db 0x00

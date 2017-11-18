@@ -1,8 +1,6 @@
 [ORG 0x00]
 [BITS 16]
 
-section .text
-
 jmp 0x07C0:bootloader_start
 
 bootloader_start:
@@ -173,8 +171,8 @@ bootloader_screen_print_end_common:
 	ret
 
 bootloader_message_boot_started:		db '[BOOTLOADER] Boot has started.', 0x00
-bootloader_message_disk_reset:			db '[BOOTLOADER] Disk is ready to read.', 0x00
-bootloader_message_micro_kernel_read:	db '[BOOTLOADER] Micro-Kernel has loaded.', 0x00
+bootloader_message_disk_reset:			db '[BOOTLOADER] Disk is ready.', 0x00
+bootloader_message_micro_kernel_read:	db '[BOOTLOADER] Micro-Kernel has been loaded.', 0x00
 bootloader_message_bios_exception:		db '[BOOTLOADER] Unknown exception occurred in BIOS.', 0x00
 bootloader_message_x:					db 0x00
 bootloader_message_y:					dw 0x00

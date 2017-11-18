@@ -1,6 +1,8 @@
 [ORG 0x00]
 [BITS 16]
 
+section .text
+
 jmp 0x07C0:bootloader_start
 
 bootloader_start:

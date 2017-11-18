@@ -8,6 +8,3 @@ bin/
 *.vcxproj
 *.filters
 *.user
-
-# Windows
-*.bat

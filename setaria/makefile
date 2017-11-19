@@ -1,11 +1,13 @@
-all: setaria.img
+all: setaria64.img
 
-boot:
-	make -C ./src/boot
+boot64:
+	make -C ./boot/x86_64
 
-setaria.img: boot
-	cp ./src/boot/bootloader.bin ./setaria.img
+setaria64.img: boot64
+	cp boot/x86_64/bootloader.bin setaria64.img
 
-clean:
-	make -C ./src/boot clean
-	rm -rf ./setaria.img
+clean64:
+	make -C ./boot/x86_64 clean
+	rm -rf ./setaria64.img
+
+clean: clean64

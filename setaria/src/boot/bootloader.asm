@@ -31,7 +31,7 @@ bootloader_screen_clear:
 	push word[bootloader_message_y]
 	push 0
 	call bootloader_screen_print
-	add word[bootloader_message_y], 0x0001
+	add word[bootloader_message_y], 1
 	add sp, 6
 
 bootloader_disk_reset:
@@ -43,13 +43,13 @@ bootloader_disk_reset:
 	mov si, 0x1000
 	mov es, si
 	mov bx, 0x0000
-	mov di, word[bootloader_micro_kernel_size]
+	mov di, word[bootloader_kernel16_size]
 
 	push bootloader_message_disk_reset
 	push word[bootloader_message_y]
 	push 0
 	call bootloader_screen_print
-	add word[bootloader_message_y], 0x0001
+	add word[bootloader_message_y], 1
 	add sp, 6
 
 bootloader_disk_read:
@@ -59,9 +59,9 @@ bootloader_disk_read:
 
 	mov ah, 0x02
 	mov al, 0x01
-	mov ch, byte[bootloader_micro_kernel_start_track]
-	mov cl, byte[bootloader_micro_kernel_start_sector]
-	mov dh, byte[bootloader_micro_kernel_start_head]
+	mov ch, byte[bootloader_kernel16_start_track]
+	mov cl, byte[bootloader_kernel16_start_sector]
+	mov dh, byte[bootloader_kernel16_start_head]
 	mov dl, 0x00
 	int 0x13
 	jc bootloader_bios_exception
@@ -69,27 +69,22 @@ bootloader_disk_read:
 	add si, 0x0020
 	mov es, si
 
-	add byte[bootloader_micro_kernel_start_sector], 0x01
+	add byte[bootloader_kernel16_start_sector], 0x01
 	cmp al, 19
 	jl bootloader_disk_read
 
-	xor byte[bootloader_micro_kernel_start_head], 0x01
-	mov byte[bootloader_micro_kernel_start_sector], 0x01
-	cmp byte[bootloader_micro_kernel_start_head], 0x00
+	xor byte[bootloader_kernel16_start_head], 0x01
+	mov byte[bootloader_kernel16_start_sector], 0x01
+	cmp byte[bootloader_kernel16_start_head], 0x00
 	jne bootloader_disk_read
 
-	add byte[bootloader_micro_kernel_start_track], 0x01
+	add byte[bootloader_kernel16_start_track], 0x01
 	jmp bootloader_disk_read
 
 bootloader_disk_read_end:
-	push bootloader_message_micro_kernel_read
-	push word[bootloader_message_y]
-	push 0
-	call bootloader_screen_print
-	add word[bootloader_message_y], 0x0001
-	add sp, 6
+	nop
 
-bootloader_start_micro_kernel:
+bootloader_start_kernel16:
 	jmp 0x1000:0x0000
 
 bootloader_bios_exception:
@@ -174,14 +169,13 @@ bootloader_screen_print_end_common:
 
 bootloader_message_boot_started:		db '[setaria] Boot has started.', 0x00
 bootloader_message_disk_reset:			db '[setaria] Disk is ready to read.', 0x00
-bootloader_message_micro_kernel_read:	db '[setaria] Micro-Kernel has been loaded.', 0x00
 bootloader_message_bios_exception:		db '[setaria] Unknown exception occurred in BIOS.', 0x00
 bootloader_message_x:					db 0x00
 bootloader_message_y:					dw 0x0000
-bootloader_micro_kernel_size:			dw 0x0400
-bootloader_micro_kernel_start_head:		db 0x00
-bootloader_micro_kernel_start_track:	db 0x00
-bootloader_micro_kernel_start_sector:	db 0x02
+bootloader_kernel16_size:			dw 0x0400
+bootloader_kernel16_start_head:		db 0x00
+bootloader_kernel16_start_track:	db 0x00
+bootloader_kernel16_start_sector:	db 0x02
 
 times 510 - ($ - $$)					db 0x00
 db 0x55

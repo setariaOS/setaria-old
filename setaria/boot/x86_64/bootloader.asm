@@ -26,7 +26,7 @@ bootloader16_screen_clear:
 	mov dh, 0x00
 	mov dl, 0x00
 	int 0x10
-	jnc bootloader16_bios_exception
+	jc bootloader16_bios_exception
 
 	jmp bootloader16_wait
 

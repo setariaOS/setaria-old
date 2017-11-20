@@ -26,23 +26,21 @@ bootloader16_screen_clear:
 	mov dh, 0x00
 	mov dl, 0x00
 	int 0x10
-	jc bootloader16_bios_exception
+	jnc bootloader16_bios_exception
 
 	jmp bootloader16_wait
 
 bootloader16_bios_exception:
 	mov di, 0
-	mov si, 0
+	mov si, bootloader16_message_bios_exception
 
 bootloader16_bios_exception_loop:
-	mov cl, byte[bootloader16_message_bios_exception + si]
-	cmp cl, 0
-	je bootloader16_bios_exception_loop_end
+	lodsb
+	or al, al
+	jz bootloader16_bios_exception_loop_end
 
-	mov byte[es:di], cl
-	add si, 1
+	mov byte[es:di], al
 	add di, 2
-
 	jmp bootloader16_bios_exception_loop
 
 bootloader16_bios_exception_loop_end:

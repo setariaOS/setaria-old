@@ -26,6 +26,18 @@ bootloader16_screen_clear:
 	mov dl, 0x00
 	int 0x10
 
+bootloader16_enable_a20:
+	mov ax, 0x2401
+	int 0x15
+	jc bootloader16_enable_a20_with_scp
+	jmp bootloader16_enable_protected_mode
+
+bootloader16_enable_a20_with_scp:
+	in al, 0x92
+	or al, 0x02
+	and al, 0xFE
+	out 0x92, al
+
 bootloader16_enable_protected_mode:
 	cli
 	lgdt [bootloader32_gdtr]

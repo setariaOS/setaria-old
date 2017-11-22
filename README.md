@@ -3,4 +3,4 @@
 Operating System for x86
 
 ## Special Thanks
-- [李](https://github.com/Lee0701) - Designed logo.
+- [李](https://github.com/Lee0701) - Designed logo

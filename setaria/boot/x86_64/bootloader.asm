@@ -58,6 +58,25 @@ bootloader32.start:
 	mov fs, ax
 	mov gs, ax
 
+bootloader32.check.memory_size:
+	mov eax, 1024 * 1024 * 32 - 4
+	mov dword[eax], 0x12345678
+	cmp dword[eax], 0x12345678
+	je bootloader32.wait
+
+	mov edi, 0x000B8000
+	mov esi, (bootloader32.message.not_enough_memory + 0x7C00)
+
+bootloader32.check.memory_size.loop:
+	lodsb
+	or al, al
+	jz bootloader32.wait
+
+	mov byte[es:edi], al
+	add edi, 2
+	jmp bootloader32.check.memory_size.loop
+
+bootloader32.wait:
 	jmp $
 
 bootloader32.gdtr:
@@ -65,27 +84,29 @@ bootloader32.gdtr:
 	dd bootloader32.gdt + 0x7C00
 
 bootloader32.gdt:
-	dw 0x0000 ; Null
+	dw 0x0000	; Null
 	dw 0x0000
 	db 0x00
 	db 0x00
 	db 0x00
 	db 0x00
 
-	dw 0xFFFF ; Code
+	dw 0xFFFF 	; Code
 	dw 0x0000
 	db 0x00
 	db 0x9A
 	db 0xCF
 	db 0x00
 
-	dw 0xFFFF ; Data
+	dw 0xFFFF 	; Data
 	dw 0x0000
 	db 0x00
 	db 0x92
 	db 0xCF
 	db 0x00
 bootloader32.gdt.end:
+
+bootloader32.message.not_enough_memory: db '[setaria] Not enough memory. At least 32MiB of memory is required.', 0x00
 
 times 510 - ($ - $$) db 0x00
 db 0x55

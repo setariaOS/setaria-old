@@ -27,10 +27,9 @@ bootloader16.screen.clear:
 bootloader16.enable.a20:
 	mov ax, 0x2401
 	int 0x15
-	jc bootloader16.enable.a20.with_scp
+	jc .with_scp
 	jmp bootloader16.enable.protected_mode
-
-bootloader16.enable.a20.with_scp:
+.with_scp:
 	in al, 0x92
 	or al, 0x02
 	and al, 0xFE
@@ -66,15 +65,14 @@ bootloader32.check.memory_size:
 
 	mov edi, 0x000B8000
 	mov esi, (bootloader32.message.not_enough_memory + 0x7C00)
-
-bootloader32.check.memory_size.loop:
+.loop:
 	lodsb
 	or al, al
 	jz bootloader32.wait
 
 	mov byte[es:edi], al
 	add edi, 2
-	jmp bootloader32.check.memory_size.loop
+	jmp .loop
 
 bootloader32.wait:
 	jmp $

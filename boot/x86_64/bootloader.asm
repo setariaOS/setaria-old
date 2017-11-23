@@ -53,9 +53,11 @@ bootloader16.enable.protected_mode:
 bootloader32.start:
 	mov ax, 0x0010
 	mov ds, ax
-	mov es, ax
 	mov fs, ax
 	mov gs, ax
+
+	mov ax, 0x0018
+	mov es, ax
 
 bootloader32.check.memory_size:
 	mov eax, 1024 * 1024 * 32 - 4
@@ -63,7 +65,7 @@ bootloader32.check.memory_size:
 	cmp dword[eax], 0x12345678
 	je bootloader32.wait
 
-	mov edi, 0x000B8000
+	mov edi, 0
 	mov esi, (bootloader32.message.not_enough_memory + 0x7C00)
 .loop:
 	lodsb
@@ -101,6 +103,13 @@ bootloader32.gdt:
 	db 0x00
 	db 0x92
 	db 0xCF
+	db 0x00
+
+	dw 0x0FA0	; Video
+	dw 0x8000
+	db 0x0B
+	db 0x92
+	db 0xC0
 	db 0x00
 bootloader32.gdt.end:
 

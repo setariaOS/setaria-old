@@ -24,18 +24,18 @@ bootloader16.screen.clear:
 	cmp si, 80 * 25 * 2
 	jl bootloader16.screen.clear
 
-bootloader16.enable.a20:
+bootloader16.a20.enable:
 	mov ax, 0x2401
 	int 0x15
 	jc .with_scp
-	jmp bootloader16.enable.protected_mode
+	jmp bootloader16.protected_mode.enable
 .with_scp:
 	in al, 0x92
 	or al, 0x02
 	and al, 0xFE
 	out 0x92, al
 
-bootloader16.enable.protected_mode:
+bootloader16.protected_mode.enable:
 	cli
 	lgdt [bootloader32.gdtr]
 
@@ -59,24 +59,24 @@ bootloader32.start:
 	mov ax, 0x0018
 	mov es, ax
 
-bootloader32.reset.stack:
+bootloader32.stack.reset:
 	mov ax, 0x0010
 	mov ss, ax
 
 	mov ebp, 0x8000
 	mov esp, 0x8000
 
-bootloader32.check.memory_size:
+bootloader32.memory.size.check:
 	mov eax, 1024 * 1024 * 32 - 4
 	mov dword[eax], 0x12345678
 	cmp dword[eax], 0x12345678
-	je bootloader32.check.supported_long_mode
+	je bootloader32.long_mode.check
 .print:
 	push bootloader32.message.not_enough_memory + 0x7C00
-	call bootloader32.function.print.string
+	call bootloader32.function.string.print
 	add esp, 4
 
-bootloader32.check.supported_long_mode:
+bootloader32.long_mode.check:
 	mov eax, 0x80000000
 	cpuid
 	cmp eax, 0x80000001
@@ -90,14 +90,14 @@ bootloader32.check.supported_long_mode:
 	jmp bootloader32.wait
 .print:
 	push bootloader32.message.not_supported_long_mode + 0x7C00
-	call bootloader32.function.print.string
+	call bootloader32.function.string.print
 	add esp, 4
 
 bootloader32.wait:
 	jmp $
 
 ; Arguments: Message Address
-bootloader32.function.print.string:
+bootloader32.function.string.print:
 	push ebp
 	mov ebp, esp
 	push edi

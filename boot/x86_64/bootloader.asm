@@ -59,49 +59,65 @@ bootloader32.start:
 	mov ax, 0x0018
 	mov es, ax
 
+bootloader32.reset.stack:
+	mov ax, 0x0010
+	mov ss, ax
+
+	mov ebp, 0x8000
+	mov esp, 0x8000
+
 bootloader32.check.memory_size:
 	mov eax, 1024 * 1024 * 32 - 4
 	mov dword[eax], 0x12345678
 	cmp dword[eax], 0x12345678
 	je bootloader32.check.supported_long_mode
-
-	mov edi, 0
-	mov esi, (bootloader32.message.not_enough_memory + 0x7C00)
-.loop:
-	lodsb
-	or al, al
-	jz bootloader32.wait
-
-	mov byte[es:edi], al
-	add edi, 2
-	jmp .loop
+.print:
+	push bootloader32.message.not_enough_memory + 0x7C00
+	call bootloader32.function.print.string
+	add esp, 4
 
 bootloader32.check.supported_long_mode:
 	mov eax, 0x80000000
 	cpuid
 	cmp eax, 0x80000001
-	jb .loop.ready
+	jb .print
 
 	mov eax, 0x80000001
 	cpuid
 	test edx, 1 << 29
-	jz .loop.ready
+	jz .print
 
 	jmp bootloader32.wait
-.loop.ready:
+.print:
+	push bootloader32.message.not_supported_long_mode + 0x7C00
+	call bootloader32.function.print.string
+	add esp, 4
+
+bootloader32.wait:
+	jmp $
+
+; Arguments: Message Address
+bootloader32.function.print.string:
+	push ebp
+	mov ebp, esp
+	push edi
+	push esi
+
 	mov edi, 0
-	mov esi, (bootloader32.message.not_supported_long_mode + 0x7C00)
+	mov esi, dword[ebp + 8]
 .loop:
 	lodsb
 	or al, al
-	jz bootloader32.wait
+	jz .end
 
 	mov byte[es:edi], al
 	add edi, 2
 	jmp .loop
-
-bootloader32.wait:
-	jmp $
+.end:
+	pop esi
+	pop edi
+	pop ebp
+	ret
 
 bootloader32.gdtr:
 	dw bootloader32.gdt.end - bootloader32.gdt - 1

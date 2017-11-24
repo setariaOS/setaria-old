@@ -1,0 +1,1 @@
+qemu-system-i386.exe -L . -m 64 -fda ./setaria32.img -localtime -M pc

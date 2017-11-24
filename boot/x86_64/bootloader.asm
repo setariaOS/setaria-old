@@ -63,10 +63,34 @@ bootloader32.check.memory_size:
 	mov eax, 1024 * 1024 * 32 - 4
 	mov dword[eax], 0x12345678
 	cmp dword[eax], 0x12345678
-	je bootloader32.wait
+	je bootloader32.check.supported_long_mode
 
 	mov edi, 0
 	mov esi, (bootloader32.message.not_enough_memory + 0x7C00)
+.loop:
+	lodsb
+	or al, al
+	jz bootloader32.wait
+
+	mov byte[es:edi], al
+	add edi, 2
+	jmp .loop
+
+bootloader32.check.supported_long_mode:
+	mov eax, 0x80000000
+	cpuid
+	cmp eax, 0x80000001
+	jb .loop.ready
+
+	mov eax, 0x80000001
+	cpuid
+	test edx, 1 << 29
+	jz .loop.ready
+
+	jmp bootloader32.wait
+.loop.ready:
+	mov edi, 0
+	mov esi, (bootloader32.message.not_supported_long_mode + 0x7C00)
 .loop:
 	lodsb
 	or al, al
@@ -114,6 +138,7 @@ bootloader32.gdt:
 bootloader32.gdt.end:
 
 bootloader32.message.not_enough_memory: db '[setaria] Not enough memory. At least 32MiB of memory is required.', 0x00
+bootloader32.message.not_supported_long_mode: db '[setaria] Long-Mode is not supported.', 0x00
 
 times 510 - ($ - $$) db 0x00
 db 0x55

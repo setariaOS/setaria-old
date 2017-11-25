@@ -87,13 +87,14 @@ bootloader32.long_mode.check:
 	test edx, 1 << 29
 	jz .print
 
-	jmp bootloader32.wait
+	jmp bootloader32.page.enable
 .print:
 	push bootloader32.message.not_supported_long_mode + 0x7C00
 	call bootloader32.function.string.print
 	add esp, 4
 
-bootloader32.wait:
+bootloader32.page.enable:
+	; TODO
 	jmp $
 
 ; Arguments: Message Address
@@ -116,6 +117,26 @@ bootloader32.function.string.print:
 .end:
 	pop esi
 	pop edi
+	pop ebp
+	ret
+
+; Arguments: Entry Address, Upper Base Address, Lower Base Address,
+;			 Upper Flags, Lower Flags
+bootloader32.function.page.entry.set:
+	push ebp
+	mov ebp, esp
+	push eax
+
+	mov eax, dword[ebp + 16]
+	or eax, dword[ebp + 24]
+	mov dword[ebp + 8], eax
+
+	mov eax, dword[ebp + 12]
+	and eax, 0x000000FF
+	or eax, dword[ebp + 20]
+	mov dword[ebp + 12], eax
+
+	pop eax
 	pop ebp
 	ret
 

@@ -97,7 +97,7 @@ bootloader32.page.enable:
 	mov eax, 0x00009000
 	push 0
 	push 0x00000001 | 0x00000002
-	push 0x00101000
+	push 0x0000A000
 	push 0
 	push eax
 	call bootloader32.function.page.entry.set

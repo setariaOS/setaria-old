@@ -94,7 +94,27 @@ bootloader32.long_mode.check:
 	add esp, 4
 
 bootloader32.page.enable:
-	; TODO
+	mov eax, 0x00009000
+	push 0
+	push 0x00000001 | 0x00000002
+	push 0x00101000
+	push 0
+	push eax
+	call bootloader32.function.page.entry.set
+	add esp, 20
+
+.pml4.loop:
+	add eax, 8
+	push 0
+	push 0
+	push 0
+	push 0
+	push eax
+	call bootloader32.function.page.entry.set
+	add esp, 20
+	cmp eax, 0x0000A000
+	jne .pml4.loop
+
 	jmp $
 
 ; Arguments: Message Address

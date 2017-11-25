@@ -94,27 +94,6 @@ bootloader32.long_mode.check:
 	add esp, 4
 
 bootloader32.page.enable:
-	mov eax, 0x00009000
-	push 0
-	push 0x00000001 | 0x00000002
-	push 0x0000A000
-	push 0
-	push eax
-	call bootloader32.function.page.entry.set
-	add esp, 20
-
-.pml4.loop:
-	add eax, 8
-	push 0
-	push 0
-	push 0
-	push 0
-	push eax
-	call bootloader32.function.page.entry.set
-	add esp, 20
-	cmp eax, 0x0000A000
-	jne .pml4.loop
-
 	jmp $
 
 ; Arguments: Message Address
@@ -137,26 +116,6 @@ bootloader32.function.string.print:
 .end:
 	pop esi
 	pop edi
-	pop ebp
-	ret
-
-; Arguments: Entry Address, Upper Base Address, Lower Base Address,
-;			 Upper Flags, Lower Flags
-bootloader32.function.page.entry.set:
-	push ebp
-	mov ebp, esp
-	push eax
-
-	mov eax, dword[ebp + 16]
-	or eax, dword[ebp + 24]
-	mov dword[ebp + 8], eax
-
-	mov eax, dword[ebp + 12]
-	and eax, 0x000000FF
-	or eax, dword[ebp + 20]
-	mov dword[ebp + 12], eax
-
-	pop eax
 	pop ebp
 	ret
 

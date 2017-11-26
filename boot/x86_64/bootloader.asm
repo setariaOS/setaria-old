@@ -24,6 +24,45 @@ bootloader16.screen.clear:
 	cmp si, 80 * 25 * 2
 	jl bootloader16.screen.clear
 
+bootloader16.disk.read:
+	mov ax, 0x0000
+	mov es, ax
+	mov bx, 0x8000
+.loop:
+	mov ah, 0x02
+	mov al, 0x01
+	mov ch, 0x00
+	mov dh, 0x00
+	mov dl, 0x00
+	mov cl, byte[bootloader16.variable.sector]
+	int 0x13
+	jc .error
+	add byte[bootloader16.variable.sector], 1
+
+	add si, 512
+	mov es, si
+
+	cmp byte[bootloader16.variable.sector], 10
+	je bootloader16.a20.enable
+
+	jmp .loop
+.error:
+	mov ax, 0xB800
+	mov es, ax
+
+	mov di, 0
+	mov si, bootloader16.message.cannot_read_memory
+.error.loop:
+	lodsb
+	or al, al
+	jz .error.end
+
+	mov byte[es:di], al
+	add di, 2
+	jmp .error.loop
+.error.end:
+	jmp $
+
 bootloader16.a20.enable:
 	mov ax, 0x2401
 	int 0x15
@@ -48,6 +87,9 @@ bootloader16.protected_mode.enable:
 	nop
 
 	jmp dword 0x00000008:(bootloader32.start + 0x7C00)
+
+bootloader16.message.cannot_read_memory: db 'E1', 0x00
+bootloader16.variable.sector: db 2
 
 [BITS 32]
 bootloader32.start:
@@ -103,18 +145,8 @@ bootloader32.page.create:
 	mov dword[ds:edi + 4], 0
 
 	mov edi, 0x0000B000
-	mov eax, 0
-	mov ebx, 0
-.loop:
-	cmp eax, 512
-	je bootloader32.long_mode.enable
-
-	mov dword[ds:edi], ebx
-	or dword[ds:edi], 0x00000001 | 0x00000002 | 0x00000080
+	mov dword[ds:edi], 0x00000001 | 0x00000002 | 0x00000080
 	mov dword[ds:edi + 4], 0
-
-	add eax, 1
-	add ebx, 0x00200000
 
 bootloader32.long_mode.enable:
 	mov eax, cr4
@@ -123,6 +155,8 @@ bootloader32.long_mode.enable:
 
 	mov eax, 0x00009000
 	mov cr3, eax
+
+	lgdt [bootloader64.gdtr]
 
 	mov ecx, 0xC0000080
 	rdmsr
@@ -192,8 +226,36 @@ bootloader32.gdt:
 	db 0x00
 bootloader32.gdt.end:
 
-bootloader32.message.not_enough_memory: db '[setaria] Not enough memory.', 0x00
-bootloader32.message.not_supported_long_mode: db '[setaria] Long-Mode is not supported.', 0x00
+bootloader32.message.not_enough_memory: db 'E2', 0x00
+bootloader32.message.not_supported_long_mode: db 'E3', 0x00
+
+[BITS 64]
+bootloader64.gdtr:
+	dw bootloader64.gdt.end - bootloader64.gdt - 1
+	dd bootloader64.gdt + 0x7C00
+
+bootloader64.gdt:
+	dw 0x0000	; Null
+	dw 0x0000
+	db 0x00
+	db 0x00
+	db 0x00
+	db 0x00
+
+	dw 0xFFFF	; Code
+	dw 0x0000
+	db 0x00
+	db 0x9A
+	db 0xAF
+	db 0x00
+
+	dw 0xFFFF	; Data
+	dw 0x0000
+	db 0x00
+	db 0x92
+	db 0xAF
+	db 0x00
+bootloader64.gdt.end:
 
 times 510 - ($ - $$) db 0x00
 db 0x55

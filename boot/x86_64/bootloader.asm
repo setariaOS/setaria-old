@@ -87,13 +87,52 @@ bootloader32.long_mode.check:
 	test edx, 1 << 29
 	jz .print
 
-	jmp bootloader32.page.enable
+	jmp bootloader32.page.create
 .print:
 	push bootloader32.message.not_supported_long_mode + 0x7C00
 	call bootloader32.function.string.print
 	add esp, 4
 
-bootloader32.page.enable:
+bootloader32.page.create:
+	mov edi, 0x00009000
+	mov dword[ds:edi], 0x0000A000 | (0x00000001 | 0x00000002)
+	mov dword[ds:edi + 4], 0
+
+	mov edi, 0x0000A000
+	mov dword[ds:edi], 0x0000B000 | (0x00000001 | 0x00000002)
+	mov dword[ds:edi + 4], 0
+
+	mov edi, 0x0000B000
+	mov eax, 0
+	mov ebx, 0
+.loop:
+	cmp eax, 512
+	je bootloader32.long_mode.enable
+
+	mov dword[ds:edi], ebx
+	or dword[ds:edi], 0x00000001 | 0x00000002 | 0x00000080
+	mov dword[ds:edi + 4], 0
+
+	add eax, 1
+	add ebx, 0x00200000
+
+bootloader32.long_mode.enable:
+	mov eax, cr4
+	or eax, 0x00000020
+	mov cr4, eax
+
+	mov eax, 0x00009000
+	mov cr3, eax
+
+	mov ecx, 0xC0000080
+	rdmsr
+	or eax, 0x00000100
+	wrmsr
+
+	mov eax, cr0
+	or eax, 0xE0000000
+	xor eax, 0x60000000
+	mov cr0, eax
 	jmp $
 
 ; Arguments: Message Address
@@ -153,7 +192,7 @@ bootloader32.gdt:
 	db 0x00
 bootloader32.gdt.end:
 
-bootloader32.message.not_enough_memory: db '[setaria] Not enough memory. At least 32MiB of memory is required.', 0x00
+bootloader32.message.not_enough_memory: db '[setaria] Not enough memory.', 0x00
 bootloader32.message.not_supported_long_mode: db '[setaria] Long-Mode is not supported.', 0x00
 
 times 510 - ($ - $$) db 0x00

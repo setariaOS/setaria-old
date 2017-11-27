@@ -24,11 +24,6 @@ bootloader16.screen.clear:
 	cmp si, 80 * 25 * 2
 	jl bootloader16.screen.clear
 
-bootloader16.disk.reset:
-	mov ax, 0x00
-	mov dl, 0x00
-	int 0x13
-
 bootloader16.disk.read:
 	mov ax, 0x0800
 	mov es, ax
@@ -92,7 +87,7 @@ bootloader16.protected_mode.enable:
 
 	jmp dword 0x00000008:(bootloader32.start + 0x7C00)
 
-bootloader16.message.cannot_read_memory: db 'E1', 0x00
+bootloader16.message.cannot_read_memory: db 'Error1', 0x00
 bootloader16.variable.sector: db 2
 
 [BITS 32]
@@ -235,8 +230,8 @@ bootloader32.gdt:
 	db 0x00
 bootloader32.gdt.end:
 
-bootloader32.message.not_enough_memory: db 'E2', 0x00
-bootloader32.message.not_supported_long_mode: db 'E3', 0x00
+bootloader32.message.not_enough_memory: db 'Error2', 0x00
+bootloader32.message.not_supported_long_mode: db 'Error3', 0x00
 
 [BITS 64]
 bootloader64.gdtr:

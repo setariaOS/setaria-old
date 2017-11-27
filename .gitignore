@@ -1,9 +1,17 @@
 *.bin
 *.img
 
+# Windows
+*.bat
+
 # Visual Studio
 .vs/
 *.sln
 *.vcxproj
 *.filters
 *.user
+
+# Makefile
+makefile
+boot/makefile
+kernel/makefile

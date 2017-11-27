@@ -3,6 +3,10 @@
 section .text
 
 kernel.entry_point:
-	jmp $
+	mov ax, 0x0010
+	mov ds, ax
+	mov es, ax
+	mov fs, ax
+	mov gs, ax
 
-times 4096 - ($ - $$) db 0x00
+	jmp $

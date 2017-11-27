@@ -2,7 +2,7 @@
 [BITS 16]
 section .text
 
-jmp 0x07C0:bootloader16.start
+jmp word 0x07C0:bootloader16.start
 
 bootloader16.start:
 	mov ax, 0x07C0
@@ -24,10 +24,15 @@ bootloader16.screen.clear:
 	cmp si, 80 * 25 * 2
 	jl bootloader16.screen.clear
 
+bootloader16.disk.reset:
+	mov ax, 0x00
+	mov dl, 0x00
+	int 0x13
+
 bootloader16.disk.read:
-	mov ax, 0x0000
+	mov ax, 0x0800
 	mov es, ax
-	mov bx, 0x8000
+	mov bx, 0x0000
 .loop:
 	mov ah, 0x02
 	mov al, 0x01
@@ -39,8 +44,7 @@ bootloader16.disk.read:
 	jc .error
 	add byte[bootloader16.variable.sector], 1
 
-	add si, 512
-	mov es, si
+	add bx, 0x0200
 
 	cmp byte[bootloader16.variable.sector], 10
 	je bootloader16.a20.enable
@@ -156,8 +160,6 @@ bootloader32.long_mode.enable:
 	mov eax, 0x00009000
 	mov cr3, eax
 
-	lgdt [bootloader64.gdtr]
-
 	mov ecx, 0xC0000080
 	rdmsr
 	or eax, 0x00000100
@@ -167,7 +169,14 @@ bootloader32.long_mode.enable:
 	or eax, 0xE0000000
 	xor eax, 0x60000000
 	mov cr0, eax
-	jmp $
+
+	jmp $ + 2
+	nop
+	nop
+
+	lgdt [bootloader64.gdtr + 0x7C00]
+
+	jmp dword 0x00000008:0x8000
 
 ; Arguments: Message Address
 bootloader32.function.string.print:

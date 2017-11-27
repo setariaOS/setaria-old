@@ -3,13 +3,17 @@ all: x86_64
 boot64:
 	$(MAKE) -C ./boot/x86_64
 
-setaria64.img: boot64
-	cp boot/x86_64/bootloader.bin setaria64.img
+kernel64:
+	$(MAKE) -C ./kernel
+
+setaria64.img: boot64 kernel64
+	cat ./boot/x86_64/bootloader.bin ./kernel/entrypoint.bin > ./setaria64.img
 
 x86_64: setaria64.img
 
 clean64:
 	$(MAKE) -C ./boot/x86_64 clean
+	$(MAKE) -C ./kernel clean
 	rm -rf ./setaria64.img
 
 clean: clean64

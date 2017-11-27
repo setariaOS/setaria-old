@@ -9,4 +9,6 @@ kernel_entry_point:
 	mov fs, ax
 	mov gs, ax
 
-	jmp $
+	jmp 0x0000000000008020
+
+times 32 - ($ - $$) db 0x00

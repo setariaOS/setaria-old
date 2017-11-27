@@ -1,0 +1,15 @@
+all: setaria.img
+
+boot:
+	$(MAKE) -C ./boot
+
+kernel:
+	$(MAKE) -C ./kernel
+
+setaria.img: boot kernel
+	cat ./boot/bootloader.bin ./kernel/entrypoint.bin > ./setaria.img
+
+clean:
+	$(MAKE) -C ./boot clean
+	$(MAKE) -C ./kernel clean
+	rm -rf ./setaria.img

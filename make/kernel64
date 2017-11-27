@@ -1,0 +1,7 @@
+all: entrypoint.bin
+
+entrypoint.bin: entrypoint.x86_64.asm
+	nasm -o entrypoint.bin entrypoint.x86_64.asm
+
+clean:
+	rm -rf ./entrypoint.bin

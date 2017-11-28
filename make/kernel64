@@ -1,7 +1,16 @@
-all: entrypoint.bin
+all: kernel.bin
 
 entrypoint.bin: entrypoint.x86_64.asm
 	nasm -o entrypoint.bin entrypoint.x86_64.asm
+
+kernel.elf:
+	$(MAKE) -C ./ -f ./dependency kernel.elf
+
+kernel.elf.bin: kernel.elf
+	objcopy -j .text -j .data -j .rodata -j .bss -S -O binary
+
+kernel.bin: entrypoint.bin kernel.elf.bin
+	cat $^ > $@
 
 clean:
 	$(MAKE) -C ./ -f ./dependency clean

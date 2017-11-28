@@ -7,7 +7,7 @@ kernel:
 	$(MAKE) -C ./kernel
 
 setaria.img: boot kernel
-	cat ./boot/bootloader.bin ./kernel/entrypoint.bin > ./setaria.img
+	cat ./boot/bootloader.bin ./kernel/kernel.bin > ./setaria.img
 
 clean:
 	$(MAKE) -C ./boot clean

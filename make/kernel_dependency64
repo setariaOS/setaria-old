@@ -8,6 +8,9 @@ DUMMY0 = $(subst entrypoint.o, , $(CPP_OBJECTS))
 dependency:
 	g++ -m64 -MM $(CPP_SOURCES) > dependency.dep
 
+kernel.elf: entrypoint.o $(CPP_OBJECTS)
+	ld -T linker.x86_64.ld -nostdlib -o $@ $^
+
 clean:
 	rm -rf dependency.dep
 

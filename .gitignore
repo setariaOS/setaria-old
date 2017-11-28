@@ -1,5 +1,7 @@
 *.bin
+*.dep
 *.img
+*.o
 
 # Windows
 *.bat
@@ -15,3 +17,4 @@
 makefile
 boot/makefile
 kernel/makefile
+kernel/dependency

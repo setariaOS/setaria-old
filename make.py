@@ -18,6 +18,9 @@ def do_m64():
 	shutil.copy(os.path.join("./make", "kernel64"), "./kernel")
 	os.rename("./kernel/kernel64", "./kernel/makefile")
 
+	shutil.copy(os.path.join("./make", "kernel_dependency64"), "./kernel")
+	os.rename("./kernel/kernel_dependency64", "./kernel/dependency")
+
 def do_clean():
 	if os.path.isfile("makefile"):
 		os.remove("makefile")
@@ -28,6 +31,9 @@ def do_clean():
 	if os.path.isfile("./kernel/makefile"):
 		os.remove("./kernel/makefile")
 
+	if os.path.isfile("./kernel/dependency"):
+		os.remove("./kernel/dependency")
+
 	if os.path.isfile("./run.bat"):
 		os.remove("./run.bat")
 
@@ -35,19 +41,18 @@ if len(sys.argv) == 1:
 	print("Fatal: No command lines. You can see a list of command lines that can be used as '--help' command line.")
 	sys.exit(0)
 
-if sys.argv[1] == "--help":
-	if len(sys.argv) != 2:
-		print("Fatal: '--help' command line can be used alone.")
-		sys.exit(0)
-
-	print("Command lines:")
-	print("\t--help: See a list of command lines.")
-	print("\t-win: Create a batch file for Qemu execution. (Use it only if your development environment is Windows.)")
-	print("\t-m64: Make x86-64 build enviroment.")
-	print("\t-clean: Delete the build enviroment that you built earlier.")
-
 if len(sys.argv) == 2:
-	if sys.argv[1] == "-m64":
+	if sys.argv[1] == "--help":
+		print("Command lines:")
+		print("\t--help: See a list of command lines.")
+		print("\t-win: Create a batch file for Qemu execution. (Use it only if your development environment is Windows.)")
+		print("\t-m64: Make x86-64 build enviroment.")
+		print("\t-clean: Delete the build enviroment that you built earlier.")
+
+	elif sys.argv[1] == "-win":
+		print("Fatal: '-win' command line can't be used alone.")
+
+	elif sys.argv[1] == "-m64":
 		do_m64()
 
 	elif sys.argv[1] == "-clean":
@@ -63,7 +68,11 @@ elif len(sys.argv) == 3:
 	type = ""
 
 	for i in range(1, 3):
-		if sys.argv[i] == "-win":
+		if sys.argv[i] == "--help":
+			print("Fatal: '--help' command line can be used alone.")
+			sys.exit(0)
+
+		elif sys.argv[i] == "-win":
 			if used_win:
 				print("Fatal: '-win' command line has already been used.")
 				sys.exit(0)
@@ -72,6 +81,7 @@ elif len(sys.argv) == 3:
 					print("Fatal: '-win' command line can't be used with '-clean' command line.")
 					sys.exit(0)
 				used_win = True
+
 		elif sys.argv[i] == "-m64":
 			if used_m64:
 				print("Fatal: '-m64' command line has already been used.")
@@ -82,7 +92,7 @@ elif len(sys.argv) == 3:
 					sys.exit(0)
 				used_m64 = True
 				type = "x86-64"
-				do_m64()
+
 		elif sys.argv[i] == "-clean":
 			if used_clean:
 				print("Fatal: '-clean' command line has already been used.")
@@ -95,9 +105,19 @@ elif len(sys.argv) == 3:
 					print("Fatal: '-clean' command line can't be used with '-m64' command line.")
 					sys.exit(0)
 				used_clean = True
-				do_clean()
+		
+		else:
+			print("Fatal: Unknown command lines. You can see a list of command lines that can be used as '--help' command line.")
+			sys.exit(0)
 
 	if used_win:
 		do_win(type)
+
+	if used_m64:
+		do_m64()
+	
+	if used_clean:
+		do_clean()
+
 else:
 	print("Fatal: Can use up to two command lines.")

@@ -1,0 +1,16 @@
+CPP_SOURCES = $(wildcard *.cc)
+CPP_OBJECTS = $(patsubst %.cc, %.o, $(CPP_SOURCES))
+DUMMY0 = $(subst entrypoint.o, , $(CPP_OBJECTS))
+
+%.o: %.cc
+	g++ -m64 -c $<
+
+dependency:
+	g++ -m64 -MM $(CPP_SOURCES) > dependency.dep
+
+clean:
+	rm -rf dependency.dep
+
+ifeq (dependency.dep, $(wildcard dependency.dep))
+include dependency.dep
+endif

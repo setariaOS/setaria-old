@@ -1,7 +1,7 @@
 all: bootloader.bin
 
 bootloader.bin: bootloader.x86_64.asm
-	nasm -o bootloader.bin bootloader.x86_64.asm
+	nasm -o $@ $^
 
 clean:
 	rm -rf ./bootloader.bin

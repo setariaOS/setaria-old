@@ -1,17 +1,23 @@
 all: kernel.bin
 
-entrypoint.bin: entrypoint.x86_64.asm
-	nasm -o entrypoint.bin entrypoint.x86_64.asm
+entrypoint.asm.o: entrypoint.x86_64.asm
+	nasm -o $@ $^
 
-kernel.elf:
-	$(MAKE) -C ./ -f ./dependency kernel.elf
+entrypoint.cc.elf.o:
+	$(MAKE) -C ./ -f ./dependency entrypoint.cc.elf.o
 
-kernel.elf.bin: kernel.elf
-	objcopy -j .text -j .data -j .rodata -j .bss -S -O binary
+entrypoint.cc.noelf.o: entrypoint.cc.elf.o
+	objcopy -j .text -j .data -j .rodata -j .bss -S -O binary $^ $@
 
-kernel.bin: entrypoint.bin kernel.elf.bin
+entrypoint.bin: entrypoint.asm.o entrypoint.cc.noelf.o
+	cat $^ > $@
+	python3 ./entrypoint_align.py
+
+kernel.bin: entrypoint.bin
 	cat $^ > $@
 
 clean:
 	$(MAKE) -C ./ -f ./dependency clean
-	rm -rf ./entrypoint.bin
+	rm -rf ./entrypoint.asm.o
+	rm -rf ./entrypoint.cc.noelf.o
+	rm -rf ./kernel.bin

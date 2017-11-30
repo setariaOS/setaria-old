@@ -2,7 +2,7 @@
 [BITS 64]
 section .text
 
-kernel_entry_point:
+kernel_entry_point_start:
 	mov ax, 0x0010
 	mov ds, ax
 	mov es, ax
@@ -13,7 +13,6 @@ kernel_entry_point:
 	mov rbp, 0x0000000000008000
 	mov rsp, 0x0000000000008000
 
-	;call 0x0000000000008020
-	jmp kernel_entry_point + 0x20
+	jmp kernel_entry_point_start + 0x20
 
 times 32 - ($ - $$) db 0x00

@@ -2,9 +2,9 @@ extern "C"
 {
 	void kernel_print(const char* message);
 
-	void kernel_main()
+	void kernel_entrypoint_main()
 	{
-		kernel_print("Hello, world!");
+		kernel_print("Hello, C++!");
 
 		while (true);
 	}

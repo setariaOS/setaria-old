@@ -13,6 +13,7 @@ kernel_entry_point:
 	mov rbp, 0x0000000000008000
 	mov rsp, 0x0000000000008000
 
-	call 0x0000000000008020
+	;call 0x0000000000008020
+	jmp kernel_entry_point + 0x20
 
 times 32 - ($ - $$) db 0x00

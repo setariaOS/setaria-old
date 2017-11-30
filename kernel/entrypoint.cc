@@ -13,9 +13,10 @@ extern "C"
 	{
 		char* screen = (char*)0xB8000;
 
-		for (int i = 0; message[i] != 0; i += 2)
+		for (int i = 0; message[i] != 0; ++i)
 		{
-			screen[i] = message[i];
+			*screen = message[i];
+			screen += 2;
 		}
 	}
 }

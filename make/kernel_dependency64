@@ -7,7 +7,7 @@ entrypoint.cc.o: entrypoint.cc
 	g++ -m64 -c $^ -o $@
 
 entrypoint.cc.elf.o: entrypoint.cc.o
-	ld -T linker.x86_64.ld -nostdlib -o $@ $^
+	ld -T entrypoint.x86_64.ld -nostdlib -o $@ $^
 
 clean:
 	rm -rf dependency.dep

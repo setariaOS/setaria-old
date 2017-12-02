@@ -6,4 +6,5 @@ Operating System for x86
 - [李](https://github.com/Lee0701) - Designed logo
 
 ## License
-setaria is using the MIT License. Commits before the license is changed to MIT License uses the MIT License, too.
+setaria is using the MIT License. Commits before the license is changed to MIT License uses the MIT License, too.<br>
+But the setaria's logo is copyrighted by [李](https://github.com/Lee0701).

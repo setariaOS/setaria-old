@@ -2,6 +2,9 @@
 # setaria
 Operating System for x86
 
+## Translation
+- [한국어(Korean)](https://github.com/setariaOS/setaria/blob/master/translation/한국어(Korean)/README.md)
+
 ## Building
 The following programs are required to build setaria(The version wrote on the right side of the program name is the version confirmed to be built normally.):
 - [g++](https://gcc.gnu.org/) 5.4.1

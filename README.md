@@ -9,9 +9,8 @@ The following programs are required to build setaria(The version wrote on the ri
 - [NASM](http://www.nasm.us/) 2.11.08
 - [Python](https://www.python.org/) 2.7.12 and 3.5.2
 
-### On Linux
-#### x86-64
-Shell the following commands by moving them to the setaria directory.
+You can build setaria by navigating to the setaria directory and executing the following commands in order:
+### x86-64
 ```
 $ python ./make.py -m64
 $ make --always-make

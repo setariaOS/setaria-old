@@ -1,9 +1,10 @@
 all: setaria.img
+dummy:
 
-boot:
+boot: dummy
 	$(MAKE) -C ./boot
 
-kernel:
+kernel: dummy
 	$(MAKE) -C ./kernel
 
 setaria.img: boot kernel

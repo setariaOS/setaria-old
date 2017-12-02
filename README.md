@@ -13,7 +13,7 @@ You can build setaria by navigating to the setaria directory and executing the f
 ### x86-64
 ```
 $ python ./make.py -m64
-$ make --always-make
+$ make
 ```
 
 ## Special Thanks

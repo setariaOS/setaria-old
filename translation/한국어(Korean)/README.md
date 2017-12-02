@@ -7,7 +7,7 @@ setaria를 빌드하기 위해서는 다음 프로그램들이 필요합니다(�
 - [g++](https://gcc.gnu.org/) 5.4.1
 - [Ld](https://gcc.gnu.org/) 2.26.1
 - [NASM](http://www.nasm.us/) 2.11.08
-- [Python](https://www.python.org/) 2.7.12 and 3.5.2
+- [Python](https://www.python.org/) 2.7.12와 3.5.2
 
 다음 명령어를 setaria 디렉터리로 이동하여 순서대로 입력하면 빌드할 수 있습니다.
 ### x86-64

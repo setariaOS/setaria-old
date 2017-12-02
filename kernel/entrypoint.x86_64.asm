@@ -1,6 +1,7 @@
-[ORG 0x00]
 [BITS 64]
 section .text
+
+extern kernel_entrypoint_main
 
 kernel_entrypoint_start:
 	mov ax, 0x0010
@@ -13,6 +14,4 @@ kernel_entrypoint_start:
 	mov rbp, 0x0000000000008000
 	mov rsp, 0x0000000000008000
 
-	jmp kernel_entrypoint_start + 32
-
-times 32 - ($ - $$) db 0x00
+	call kernel_entrypoint_main

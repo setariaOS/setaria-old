@@ -4,7 +4,8 @@ extern "C"
 
 	void kernel_entrypoint_main()
 	{
-		kernel_print("Hello, C++!");
+		const char* message = "Hello, world!";
+		kernel_print(message);
 
 		while (true);
 	}

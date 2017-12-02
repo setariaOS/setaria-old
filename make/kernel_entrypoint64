@@ -1,0 +1,12 @@
+entrypoint.asm.o: entrypoint.x86_64.asm
+	$(NASM64) -o $@ $^
+
+entrypoint.cc.o: entrypoint.cc
+	$(G++64) -o $@ $^
+
+entrypoint.cc.elf.o: entrypoint.asm.o entrypoint.cc.o
+	$(LD64) -o $@ $^
+
+entrypoint.bin: entrypoint.cc.elf.o
+	$(OBJCOPY64) $^ $@
+	python ./entrypoint_align.py

@@ -2,6 +2,29 @@ import os
 import shutil
 import sys
 
+def preprocessor(type):
+	need_preprocessor_files = [ "./kernel/makefile" ]
+
+	include_files = { "kernel:entrypoint":"" }
+
+	if type == "x86-64":
+		f = open("./make/kernel_entrypoint64", "r")
+		include_files["kernel:entrypoint"] = f.read()
+		f.close()
+
+	for path in need_preprocessor_files:
+		f = open(path, "r")
+		f_text = f.read()
+		f.close()
+
+		for key, value in include_files.items():
+			preprocessor = "<<include|" + key + ">>"
+			f_text = f_text.replace(preprocessor, value)
+		
+		f = open(path, "w")
+		f.write(f_text)
+		f.close()
+
 def do_win(type):
 	if type == "x86-64":
 		f = open("./run.bat", "w")
@@ -12,27 +35,27 @@ def do_m64():
 	shutil.copy(os.path.join("./make", "root64"), "./")
 	os.rename("root64", "makefile")
 
+	shutil.copy(os.path.join("./make", "buildtool64"), "./")
+	os.rename("buildtool64", "buildtool")
+
 	shutil.copy(os.path.join("./make", "boot64"), "./boot")
 	os.rename("./boot/boot64", "./boot/makefile")
 
 	shutil.copy(os.path.join("./make", "kernel64"), "./kernel")
 	os.rename("./kernel/kernel64", "./kernel/makefile")
 
-	shutil.copy(os.path.join("./make", "kernel_dependency64"), "./kernel")
-	os.rename("./kernel/kernel_dependency64", "./kernel/dependency")
-
 def do_clean():
 	if os.path.isfile("makefile"):
 		os.remove("makefile")
+
+	if os.path.isfile("buildtool"):
+		os.remove("buildtool")
 
 	if os.path.isfile("./boot/makefile"):
 		os.remove("./boot/makefile")
 
 	if os.path.isfile("./kernel/makefile"):
 		os.remove("./kernel/makefile")
-
-	if os.path.isfile("./kernel/dependency"):
-		os.remove("./kernel/dependency")
 
 	if os.path.isfile("./run.bat"):
 		os.remove("./run.bat")
@@ -115,6 +138,7 @@ elif len(sys.argv) == 3:
 
 	if used_m64:
 		do_m64()
+		preprocessor(type)
 	
 	if used_clean:
 		do_clean()

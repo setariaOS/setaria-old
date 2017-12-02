@@ -5,7 +5,7 @@ SECTIONS
 	PROVIDE(__executable_start = 0x400000);
 	. = 0x400000 + SIZEOF_HEADERS;
 
-	.text 0x8020:
+	.text 0x8000:
 	{
 		*(.text .stub .text.* .gnu.linkonce.t.*)
 		*(.gnu.warning)

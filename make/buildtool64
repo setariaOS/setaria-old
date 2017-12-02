@@ -1,0 +1,4 @@
+G++64 = g++ -c -m64 -ffreestanding
+LD64 = ld -melf_x86_64 -nostdlib -T ./linker.x86_64.ld
+NASM64 = nasm -f elf64
+OBJCOPY64 = objcopy -j .text -j .rodata -j .data -j .bss -S -O binary

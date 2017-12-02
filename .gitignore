@@ -14,7 +14,7 @@
 *.user
 
 # Makefile
+buildtool
 makefile
 boot/makefile
 kernel/makefile
-kernel/dependency

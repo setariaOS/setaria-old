@@ -25,10 +25,10 @@ def preprocessor(type):
 		f.write(f_text)
 		f.close()
 
-def do_win(type):
+def do_run(type):
 	if type == "x86-64":
 		f = open("./run.bat", "w")
-		f.write("qemu-system-x86_64.exe -L . -m 64 -fda ./setaria.img -localtime -M pc")
+		f.write("qemu-system-x86_64 -L . -m 64 -fda ./setaria.img -localtime -M pc")
 		f.close()
 
 def do_m64():
@@ -68,12 +68,12 @@ if len(sys.argv) == 2:
 	if sys.argv[1] == "--help":
 		print("Command lines:")
 		print("\t--help: See a list of command lines.")
-		print("\t-win: Create a batch file for Qemu execution. (Use it only if your development environment is Windows.)")
+		print("\t-run: Create a batch file for QEMU execution.")
 		print("\t-m64: Make x86-64 build enviroment.")
 		print("\t-clean: Delete the build enviroment that you built earlier.")
 
-	elif sys.argv[1] == "-win":
-		print("Fatal: '-win' command line can't be used alone.")
+	elif sys.argv[1] == "-run":
+		print("Fatal: '-run' command line can't be used alone.")
 
 	elif sys.argv[1] == "-m64":
 		do_m64()
@@ -85,7 +85,7 @@ if len(sys.argv) == 2:
 		print("Fatal: Unknown command lines. You can see a list of command lines that can be used as '--help' command line.")
 
 elif len(sys.argv) == 3:
-	used_win = False
+	used_run = False
 	used_m64 = False
 	used_clean = False
 	type = ""
@@ -95,15 +95,15 @@ elif len(sys.argv) == 3:
 			print("Fatal: '--help' command line can be used alone.")
 			sys.exit(0)
 
-		elif sys.argv[i] == "-win":
-			if used_win:
-				print("Fatal: '-win' command line has already been used.")
+		elif sys.argv[i] == "-run":
+			if used_run:
+				print("Fatal: '-run' command line has already been used.")
 				sys.exit(0)
 			else:
 				if used_clean:
-					print("Fatal: '-win' command line can't be used with '-clean' command line.")
+					print("Fatal: '-run' command line can't be used with '-clean' command line.")
 					sys.exit(0)
-				used_win = True
+				used_run = True
 
 		elif sys.argv[i] == "-m64":
 			if used_m64:
@@ -121,8 +121,8 @@ elif len(sys.argv) == 3:
 				print("Fatal: '-clean' command line has already been used.")
 				sys.exit(0)
 			else:
-				if used_win:
-					print("Fatal: '-clean' command line can't be used with '-win' command line.")
+				if used_run:
+					print("Fatal: '-clean' command line can't be used with '-run' command line.")
 					sys.exit(0)
 				elif used_m64:
 					print("Fatal: '-clean' command line can't be used with '-m64' command line.")
@@ -133,8 +133,8 @@ elif len(sys.argv) == 3:
 			print("Fatal: Unknown command lines. You can see a list of command lines that can be used as '--help' command line.")
 			sys.exit(0)
 
-	if used_win:
-		do_win(type)
+	if used_run:
+		do_run(type)
 
 	if used_m64:
 		do_m64()

@@ -18,9 +18,9 @@ def preprocessor(type):
 		f.close()
 
 		for key, value in include_files.items():
-			preprocessor = "<<include|" + key + ">>"
-			f_text = f_text.replace(preprocessor, value)
-		
+			preprocessor_command = "<<include|" + key + ">>"
+			f_text = f_text.replace(preprocessor_command, value)
+
 		f = open(path, "w")
 		f.write(f_text)
 		f.close()
@@ -77,6 +77,7 @@ if len(sys.argv) == 2:
 
 	elif sys.argv[1] == "-m64":
 		do_m64()
+		preprocessor("x86-64")
 
 	elif sys.argv[1] == "-clean":
 		do_clean()
@@ -128,7 +129,7 @@ elif len(sys.argv) == 3:
 					print("Fatal: '-clean' command line can't be used with '-m64' command line.")
 					sys.exit(0)
 				used_clean = True
-		
+
 		else:
 			print("Fatal: Unknown command lines. You can see a list of command lines that can be used as '--help' command line.")
 			sys.exit(0)
@@ -139,7 +140,7 @@ elif len(sys.argv) == 3:
 	if used_m64:
 		do_m64()
 		preprocessor(type)
-	
+
 	if used_clean:
 		do_clean()
 

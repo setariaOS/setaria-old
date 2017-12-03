@@ -4,8 +4,20 @@ extern "C"
 
 	void kernel_entrypoint_main()
 	{
-		const char* message = "Hello, world!";
-		kernel_print(message);
+		char array[50];
+
+		int i = 0;
+		for (char c = 'A'; c != 'Z' + 1; ++c, ++i)
+		{
+			array[i] = c;
+		}
+
+		for (char c = 'a'; c != 'z' + 1; ++c, ++i)
+		{
+			array[i] = c;
+		}
+
+		kernel_print(array);
 
 		while (true);
 	}

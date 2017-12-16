@@ -1,9 +1,10 @@
-![logo_wide](https://github.com/setariaOS/setaria/blob/master/logo.png)
+![logo_wide](https://github.com/setariaOS/setaria-old/blob/master/logo.png)
 # setaria
-Operating System for x86
+Operating System for x86<br>
+**This repository is no longer updated. Move to new repository: [Click](https://github.com/setariaOS/setaria)**
 
 ## Translation
-- [한국어(Korean)](https://github.com/setariaOS/setaria/blob/master/translation/한국어(Korean)/README.md)
+- [한국어(Korean)](https://github.com/setariaOS/setaria-old/blob/master/translation/한국어(Korean)/README.md)
 
 ## Building
 The following programs are required to build setaria(The version wrote on the right side of the program name is the version confirmed to be built normally.):

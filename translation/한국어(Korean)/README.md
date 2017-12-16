@@ -1,6 +1,7 @@
-![logo_wide](https://github.com/setariaOS/setaria/blob/master/logo.png)
+![logo_wide](https://github.com/setariaOS/setaria-old/blob/master/logo.png)
 # setaria
-x86 아키텍쳐를 위한 운영체제
+x86 아키텍쳐를 위한 운영체제<br>
+**이 레포지토리는 더 이상 업데이트 되지 않습니다. 새 레포지토리로 이동: [클릭](https://github.com/setariaOS/setaria)**
 
 ## 빌드
 setaria를 빌드하기 위해서는 다음 프로그램들이 필요합니다(프로그램 이름 오른쪽에 쓰여진 버전은 빌드가 정상적으로 되는 것을 확인한 버전입니다.):
